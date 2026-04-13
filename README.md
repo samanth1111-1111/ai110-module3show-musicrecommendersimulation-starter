@@ -229,6 +229,8 @@ Three standard profiles and two adversarial edge-case profiles were defined in `
 
 ============================================================
 ```
+<img width="618" height="225" alt="image" src="https://github.com/user-attachments/assets/124d55de-d643-4b5f-8aa1-2feb53de588a" />
+
 
 **Observation:** Genre lock-in is strong — the top 2 slots are both `pop` regardless of numeric fit. #3 wins mood-match but loses the genre bonus.
 
@@ -300,6 +302,8 @@ Three standard profiles and two adversarial edge-case profiles were defined in `
 
 ============================================================
 ```
+<img width="603" height="228" alt="image" src="https://github.com/user-attachments/assets/4358a873-6fad-4488-a547-db1062db34d7" />
+
 
 **Observation:** The system surfaces all three lofi songs, then falls back to acoustically similar genres (ambient, blues). Results feel correct for this profile.
 
@@ -368,10 +372,13 @@ Three standard profiles and two adversarial edge-case profiles were defined in `
 
 ============================================================
 ```
+<img width="617" height="230" alt="image" src="https://github.com/user-attachments/assets/ed7d1193-e3d0-4e44-bda4-ddd16f05a68e" />
+
 
 **Observation:** Only one `rock` song exists in the catalog so results 2–5 are from unrelated genres. The catalog is too narrow for a rock user.
 
 ---
+
 
 ### Edge Case 1 — High Energy + Sad Mood (conflicting preferences)
 
@@ -435,6 +442,8 @@ Three standard profiles and two adversarial edge-case profiles were defined in `
 
 ============================================================
 ```
+<img width="622" height="202" alt="image" src="https://github.com/user-attachments/assets/3587f08c-9cb8-4677-9458-fcef4b7c39a1" />
+
 
 **Observation (adversarial):** The mood signal `sad` is completely ignored — no `sad` song exists, and the genre bonus of +2.0 dominates so strongly that upbeat pop songs (#1 Gym Hero, #2 Sunrise City) float to the top even though their valence contradicts the user's preference. This reveals the genre-lock bias described in the scoring section.
 
@@ -506,6 +515,8 @@ Three standard profiles and two adversarial edge-case profiles were defined in `
 **Observation (adversarial):** Requesting both `energy=1.0` and `acousticness=1.0` is physically contradictory — no real song can max both. The scores collapse (top result is only 4.38 / 7.75) and the genre match for `jazz` (#1) wins even though the jazz song scores poorly on energy and tempo. The `tempo=200` target is outside the entire catalog's range, earning near-zero tempo points everywhere. This shows the system handles impossible preferences gracefully but returns low-confidence results.
 
 ---
+<img width="675" height="228" alt="image" src="https://github.com/user-attachments/assets/ded027d7-a5ab-45c8-86db-6341014b4312" />
+
 
 ## Limitations and Risks
 
