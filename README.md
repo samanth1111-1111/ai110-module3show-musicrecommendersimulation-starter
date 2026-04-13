@@ -51,7 +51,70 @@ Numeric similarity is calculated as: `points = weight × (1 − clamped_distance
 
 All songs are scored, collected into a list, sorted by score descending, and the top-k are returned.
 
+**Sample terminal output** (pop/happy profile, top 5):
 
+```
+============================================================
+  MUSIC RECOMMENDATIONS
+  Profile: genre=pop | mood=happy
+============================================================
+
+#1  Sunrise City  —  Neon Echo
+    Score : 7.64 / 7.75
+    Genre : pop  |  Mood: happy
+    Why   :
+            • genre match (pop): +2.0
+            • mood match (happy): +1.0
+            • energy (song=0.82, target=0.80): +1.47
+            • acousticness (song=0.18, target=0.20): +0.98
+            • tempo (song=118.00, target=115.00): +0.97
+            • valence (song=0.84, target=0.85): +0.74
+            • danceability (song=0.79, target=0.75): +0.48
+
+#2  Gym Hero  —  Max Pulse
+    Score : 6.13 / 7.75
+    Genre : pop  |  Mood: intense
+    Why   :
+            • genre match (pop): +2.0
+            • energy (song=0.93, target=0.80): +1.30
+            • acousticness (song=0.05, target=0.20): +0.85
+            • tempo (song=132.00, target=115.00): +0.86
+            • valence (song=0.77, target=0.85): +0.69
+            • danceability (song=0.88, target=0.75): +0.43
+
+#3  Rooftop Lights  —  Indigo Parade
+    Score : 5.41 / 7.75
+    Genre : indie pop  |  Mood: happy
+    Why   :
+            • mood match (happy): +1.0
+            • energy (song=0.76, target=0.80): +1.44
+            • acousticness (song=0.35, target=0.20): +0.85
+            • tempo (song=124.00, target=115.00): +0.93
+            • valence (song=0.81, target=0.85): +0.72
+            • danceability (song=0.82, target=0.75): +0.47
+
+#4  Night Drive Loop  —  Neon Echo
+    Score : 4.33 / 7.75
+    Genre : synthwave  |  Mood: moody
+    Why   :
+            • energy (song=0.75, target=0.80): +1.42
+            • acousticness (song=0.22, target=0.20): +0.98
+            • tempo (song=110.00, target=115.00): +0.96
+            • valence (song=0.49, target=0.85): +0.48
+            • danceability (song=0.73, target=0.75): +0.49
+
+#5  Rise Up Together  —  Marla Sinclair
+    Score : 4.23 / 7.75
+    Genre : soul  |  Mood: uplifting
+    Why   :
+            • energy (song=0.68, target=0.80): +1.32
+            • acousticness (song=0.41, target=0.20): +0.79
+            • tempo (song=102.00, target=115.00): +0.89
+            • valence (song=0.86, target=0.85): +0.74
+            • danceability (song=0.77, target=0.75): +0.49
+
+============================================================
+```
 
 Genre carries the single largest weight in the system (+2.0), which is double the mood weight (+1.0). This creates a structural bias: a song that perfectly matches the user's mood and all numeric features but belongs to the wrong genre can score at most **5.75 / 7.75 (74%)**, while a genre-matching song with the wrong mood and identical numeric features scores **6.75 / 7.75 (87%)**. The genre-match song wins every time, even if the mood-match song would feel like a better fit to the listener.
 
