@@ -29,6 +29,34 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
+Each `Song` stores ten fields — `id`, `title`, `artist`, and seven scoring features: `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, and `acousticness`.
+
+The `UserProfile` stores `favorite_genre`, `favorite_mood`, `target_energy`, and `likes_acoustic`. The functional scorer (`score_song`) extends this with optional numeric targets for `target_tempo_bpm`, `target_valence`, `target_danceability`, and `target_acousticness`.
+
+**Scoring — Algorithm Recipe:**
+
+Each song is scored out of a maximum of **7.75 points** using a point-weighted formula:
+
+| Signal | Type | Points |
+|---|---|---|
+| Genre matches user preference | Categorical (exact) | +2.00 |
+| Mood matches user preference | Categorical (exact) | +1.00 |
+| Energy closeness | Numeric similarity | up to +1.50 |
+| Acousticness closeness | Numeric similarity | up to +1.00 |
+| Tempo closeness (normalized over 120 bpm) | Numeric similarity | up to +1.00 |
+| Valence closeness | Numeric similarity | up to +0.75 |
+| Danceability closeness | Numeric similarity | up to +0.50 |
+
+Numeric similarity is calculated as: `points = weight × (1 − clamped_distance)`, so a perfect match earns the full weight and a maximum-distance mismatch earns 0. Categorical fields are all-or-nothing — no partial credit.
+
+All songs are scored, collected into a list, sorted by score descending, and the top-k are returned.
+
+
+
+Genre carries the single largest weight in the system (+2.0), which is double the mood weight (+1.0). This creates a structural bias: a song that perfectly matches the user's mood and all numeric features but belongs to the wrong genre can score at most **5.75 / 7.75 (74%)**, while a genre-matching song with the wrong mood and identical numeric features scores **6.75 / 7.75 (87%)**. The genre-match song wins every time, even if the mood-match song would feel like a better fit to the listener.
+
+In practice this means a user who wants "intense" songs could receive rock tracks they dislike simply because their profile says `genre=rock`, while a perfect-mood EDM track gets buried. Systems that over-weight a single categorical label risk creating a filter bubble around that label — the recommender stops surfacing diversity and starts reinforcing one identity (genre) regardless of how well everything else fits.
+
 ---
 
 ## Getting Started
