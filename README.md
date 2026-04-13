@@ -159,11 +159,349 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+Three standard profiles and two adversarial edge-case profiles were defined in `src/main.py` and run against the full catalog. Terminal output for each is captured below.
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+---
+
+### Profile 1 — High-Energy Pop (`genre=pop | mood=happy`)
+
+```
+============================================================
+  PROFILE: High-Energy Pop
+  genre=pop | mood=happy
+============================================================
+
+#1  Sunrise City  —  Neon Echo
+    Score : 7.39 / 7.75
+    Genre : pop  |  Mood: happy
+    Why   :
+            • genre match (pop): +2.0
+            • mood match (happy): +1.0
+            • energy (song=0.82, target=0.90): +1.38
+            • acousticness (song=0.18, target=0.10): +0.92
+            • tempo (song=118.00, target=128.00): +0.92
+            • valence (song=0.84, target=0.90): +0.70
+            • danceability (song=0.79, target=0.85): +0.47
+
+#2  Gym Hero  —  Max Pulse
+    Score : 6.51 / 7.75
+    Genre : pop  |  Mood: intense
+    Why   :
+            • genre match (pop): +2.0
+            • energy (song=0.93, target=0.90): +1.46
+            • acousticness (song=0.05, target=0.10): +0.95
+            • tempo (song=132.00, target=128.00): +0.97
+            • valence (song=0.77, target=0.90): +0.65
+            • danceability (song=0.88, target=0.85): +0.48
+
+#3  Rooftop Lights  —  Indigo Parade
+    Score : 5.17 / 7.75
+    Genre : indie pop  |  Mood: happy
+    Why   :
+            • mood match (happy): +1.0
+            • energy (song=0.76, target=0.90): +1.29
+            • acousticness (song=0.35, target=0.10): +0.75
+            • tempo (song=124.00, target=128.00): +0.97
+            • valence (song=0.81, target=0.90): +0.68
+            • danceability (song=0.82, target=0.85): +0.48
+
+#4  Overdrive  —  Pulse Grid
+    Score : 4.44 / 7.75
+    Genre : edm  |  Mood: euphoric
+    Why   :
+            • energy (song=0.96, target=0.90): +1.41
+            • acousticness (song=0.03, target=0.10): +0.93
+            • tempo (song=138.00, target=128.00): +0.92
+            • valence (song=0.88, target=0.90): +0.73
+            • danceability (song=0.95, target=0.85): +0.45
+
+#5  Street Chronicles  —  Verse Architect
+    Score : 4.25 / 7.75
+    Genre : hip-hop  |  Mood: energetic
+    Why   :
+            • energy (song=0.87, target=0.90): +1.46
+            • acousticness (song=0.08, target=0.10): +0.98
+            • tempo (song=96.00, target=128.00): +0.73
+            • valence (song=0.72, target=0.90): +0.61
+            • danceability (song=0.91, target=0.85): +0.47
+
+============================================================
+```
+
+**Observation:** Genre lock-in is strong — the top 2 slots are both `pop` regardless of numeric fit. #3 wins mood-match but loses the genre bonus.
+
+---
+
+### Profile 2 — Chill Lofi (`genre=lofi | mood=chill`)
+
+```
+============================================================
+  PROFILE: Chill Lofi
+  genre=lofi | mood=chill
+============================================================
+
+#1  Library Rain  —  Paper Lanterns
+    Score : 7.26 / 7.75
+    Genre : lofi  |  Mood: chill
+    Why   :
+            • genre match (lofi): +2.0
+            • mood match (chill): +1.0
+            • energy (song=0.35, target=0.25): +1.35
+            • acousticness (song=0.86, target=0.75): +0.89
+            • tempo (song=72.00, target=75.00): +0.97
+            • valence (song=0.60, target=0.45): +0.64
+            • danceability (song=0.58, target=0.40): +0.41
+
+#2  Midnight Coding  —  LoRoom
+    Score : 7.24 / 7.75
+    Genre : lofi  |  Mood: chill
+    Why   :
+            • genre match (lofi): +2.0
+            • mood match (chill): +1.0
+            • energy (song=0.42, target=0.25): +1.25
+            • acousticness (song=0.71, target=0.75): +0.96
+            • tempo (song=78.00, target=75.00): +0.97
+            • valence (song=0.56, target=0.45): +0.67
+            • danceability (song=0.62, target=0.40): +0.39
+
+#3  Focus Flow  —  LoRoom
+    Score : 6.25 / 7.75
+    Genre : lofi  |  Mood: focused
+    Why   :
+            • genre match (lofi): +2.0
+            • energy (song=0.40, target=0.25): +1.27
+            • acousticness (song=0.78, target=0.75): +0.97
+            • tempo (song=80.00, target=75.00): +0.96
+            • valence (song=0.59, target=0.45): +0.65
+            • danceability (song=0.60, target=0.40): +0.40
+
+#4  Spacewalk Thoughts  —  Orbit Bloom
+    Score : 5.26 / 7.75
+    Genre : ambient  |  Mood: chill
+    Why   :
+            • mood match (chill): +1.0
+            • energy (song=0.28, target=0.25): +1.46
+            • acousticness (song=0.92, target=0.75): +0.83
+            • tempo (song=60.00, target=75.00): +0.88
+            • valence (song=0.65, target=0.45): +0.60
+            • danceability (song=0.41, target=0.40): +0.49
+
+#5  Crossroads at Midnight  —  Eli Gravel
+    Score : 4.30 / 7.75
+    Genre : blues  |  Mood: brooding
+    Why   :
+            • energy (song=0.38, target=0.25): +1.30
+            • acousticness (song=0.88, target=0.75): +0.87
+            • tempo (song=72.00, target=75.00): +0.97
+            • valence (song=0.36, target=0.45): +0.68
+            • danceability (song=0.44, target=0.40): +0.48
+
+============================================================
+```
+
+**Observation:** The system surfaces all three lofi songs, then falls back to acoustically similar genres (ambient, blues). Results feel correct for this profile.
+
+---
+
+### Profile 3 — Deep Intense Rock (`genre=rock | mood=intense`)
+
+```
+============================================================
+  PROFILE: Deep Intense Rock
+  genre=rock | mood=intense
+============================================================
+
+#1  Storm Runner  —  Voltline
+    Score : 7.35 / 7.75
+    Genre : rock  |  Mood: intense
+    Why   :
+            • genre match (rock): +2.0
+            • mood match (intense): +1.0
+            • energy (song=0.91, target=0.95): +1.44
+            • acousticness (song=0.10, target=0.05): +0.95
+            • tempo (song=152.00, target=140.00): +0.90
+            • valence (song=0.48, target=0.30): +0.61
+            • danceability (song=0.66, target=0.55): +0.45
+
+#2  Gym Hero  —  Max Pulse
+    Score : 5.14 / 7.75
+    Genre : pop  |  Mood: intense
+    Why   :
+            • mood match (intense): +1.0
+            • energy (song=0.93, target=0.95): +1.47
+            • acousticness (song=0.05, target=0.05): +1.00
+            • tempo (song=132.00, target=140.00): +0.93
+            • valence (song=0.77, target=0.30): +0.40
+            • danceability (song=0.88, target=0.55): +0.34
+
+#3  Iron Requiem  —  Shatter Hex
+    Score : 4.42 / 7.75
+    Genre : metal  |  Mood: angry
+    Why   :
+            • energy (song=0.95, target=0.95): +1.50
+            • acousticness (song=0.06, target=0.05): +0.99
+            • tempo (song=175.00, target=140.00): +0.71
+            • valence (song=0.33, target=0.30): +0.73
+            • danceability (song=0.58, target=0.55): +0.49
+
+#4  Overdrive  —  Pulse Grid
+    Score : 4.05 / 7.75
+    Genre : edm  |  Mood: euphoric
+    Why   :
+            • energy (song=0.96, target=0.95): +1.48
+            • acousticness (song=0.03, target=0.05): +0.98
+            • tempo (song=138.00, target=140.00): +0.98
+            • valence (song=0.88, target=0.30): +0.31
+            • danceability (song=0.95, target=0.55): +0.30
+
+#5  Night Drive Loop  —  Neon Echo
+    Score : 3.80 / 7.75
+    Genre : synthwave  |  Mood: moody
+    Why   :
+            • energy (song=0.75, target=0.95): +1.20
+            • acousticness (song=0.22, target=0.05): +0.83
+            • tempo (song=110.00, target=140.00): +0.75
+            • valence (song=0.49, target=0.30): +0.61
+            • danceability (song=0.73, target=0.55): +0.41
+
+============================================================
+```
+
+**Observation:** Only one `rock` song exists in the catalog so results 2–5 are from unrelated genres. The catalog is too narrow for a rock user.
+
+---
+
+### Edge Case 1 — High Energy + Sad Mood (conflicting preferences)
+
+```
+============================================================
+  PROFILE: Edge Case: High Energy + Sad Mood (conflicting)
+  genre=pop | mood=sad
+============================================================
+
+#1  Gym Hero  —  Max Pulse
+    Score : 6.15 / 7.75
+    Genre : pop  |  Mood: intense
+    Why   :
+            • genre match (pop): +2.0
+            • energy (song=0.93, target=0.95): +1.47
+            • acousticness (song=0.05, target=0.10): +0.95
+            • tempo (song=132.00, target=130.00): +0.98
+            • valence (song=0.77, target=0.15): +0.29
+            • danceability (song=0.88, target=0.80): +0.46
+
+#2  Sunrise City  —  Neon Echo
+    Score : 5.84 / 7.75
+    Genre : pop  |  Mood: happy
+    Why   :
+            • genre match (pop): +2.0
+            • energy (song=0.82, target=0.95): +1.30
+            • acousticness (song=0.18, target=0.10): +0.92
+            • tempo (song=118.00, target=130.00): +0.90
+            • valence (song=0.84, target=0.15): +0.23
+            • danceability (song=0.79, target=0.80): +0.49
+
+#3  Storm Runner  —  Voltline
+    Score : 4.19 / 7.75
+    Genre : rock  |  Mood: intense
+    Why   :
+            • energy (song=0.91, target=0.95): +1.44
+            • acousticness (song=0.10, target=0.10): +1.00
+            • tempo (song=152.00, target=130.00): +0.82
+            • valence (song=0.48, target=0.15): +0.50
+            • danceability (song=0.66, target=0.80): +0.43
+
+#4  Iron Requiem  —  Shatter Hex
+    Score : 4.08 / 7.75
+    Genre : metal  |  Mood: angry
+    Why   :
+            • energy (song=0.95, target=0.95): +1.50
+            • acousticness (song=0.06, target=0.10): +0.96
+            • tempo (song=175.00, target=130.00): +0.62
+            • valence (song=0.33, target=0.15): +0.61
+            • danceability (song=0.58, target=0.80): +0.39
+
+#5  Overdrive  —  Pulse Grid
+    Score : 3.97 / 7.75
+    Genre : edm  |  Mood: euphoric
+    Why   :
+            • energy (song=0.96, target=0.95): +1.48
+            • acousticness (song=0.03, target=0.10): +0.93
+            • tempo (song=138.00, target=130.00): +0.93
+            • valence (song=0.88, target=0.15): +0.20
+            • danceability (song=0.95, target=0.80): +0.43
+
+============================================================
+```
+
+**Observation (adversarial):** The mood signal `sad` is completely ignored — no `sad` song exists, and the genre bonus of +2.0 dominates so strongly that upbeat pop songs (#1 Gym Hero, #2 Sunrise City) float to the top even though their valence contradicts the user's preference. This reveals the genre-lock bias described in the scoring section.
+
+---
+
+### Edge Case 2 — All Extremes (energy=1.0 AND acousticness=1.0, tempo=200)
+
+```
+============================================================
+  PROFILE: Edge Case: All Extremes (energy=1.0, acousticness=1.0)
+  genre=jazz | mood=moody
+============================================================
+
+#1  Coffee Shop Stories  —  Slow Stereo
+    Score : 4.38 / 7.75
+    Genre : jazz  |  Mood: relaxed
+    Why   :
+            • genre match (jazz): +2.0
+            • energy (song=0.37, target=1.00): +0.55
+            • acousticness (song=0.89, target=1.00): +0.89
+            • tempo (song=90.00, target=200.00): +0.08
+            • valence (song=0.71, target=0.50): +0.59
+            • danceability (song=0.54, target=1.00): +0.27
+
+#2  Night Drive Loop  —  Neon Echo
+    Score : 3.69 / 7.75
+    Genre : synthwave  |  Mood: moody
+    Why   :
+            • mood match (moody): +1.0
+            • energy (song=0.75, target=1.00): +1.12
+            • acousticness (song=0.22, target=1.00): +0.22
+            • tempo (song=110.00, target=200.00): +0.25
+            • valence (song=0.49, target=0.50): +0.74
+            • danceability (song=0.73, target=1.00): +0.36
+
+#3  Iron Requiem  —  Shatter Hex
+    Score : 3.18 / 7.75
+    Genre : metal  |  Mood: angry
+    Why   :
+            • energy (song=0.95, target=1.00): +1.42
+            • acousticness (song=0.06, target=1.00): +0.06
+            • tempo (song=175.00, target=200.00): +0.79
+            • valence (song=0.33, target=0.50): +0.62
+            • danceability (song=0.58, target=1.00): +0.29
+
+#4  Storm Runner  —  Voltline
+    Score : 3.12 / 7.75
+    Genre : rock  |  Mood: intense
+    Why   :
+            • energy (song=0.91, target=1.00): +1.36
+            • acousticness (song=0.10, target=1.00): +0.10
+            • tempo (song=152.00, target=200.00): +0.60
+            • valence (song=0.48, target=0.50): +0.73
+            • danceability (song=0.66, target=1.00): +0.33
+
+#5  Overdrive  —  Pulse Grid
+    Score : 2.88 / 7.75
+    Genre : edm  |  Mood: euphoric
+    Why   :
+            • energy (song=0.96, target=1.00): +1.44
+            • acousticness (song=0.03, target=1.00): +0.03
+            • tempo (song=138.00, target=200.00): +0.48
+            • valence (song=0.88, target=0.50): +0.46
+            • danceability (song=0.95, target=1.00): +0.47
+
+============================================================
+```
+
+**Observation (adversarial):** Requesting both `energy=1.0` and `acousticness=1.0` is physically contradictory — no real song can max both. The scores collapse (top result is only 4.38 / 7.75) and the genre match for `jazz` (#1) wins even though the jazz song scores poorly on energy and tempo. The `tempo=200` target is outside the entire catalog's range, earning near-zero tempo points everywhere. This shows the system handles impossible preferences gracefully but returns low-confidence results.
 
 ---
 
