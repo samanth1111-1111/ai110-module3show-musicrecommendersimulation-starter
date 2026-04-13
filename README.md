@@ -1,4 +1,4 @@
-# 🎵 Music Recommender Simulation
+ 🎵 Music Recommender Simulation 
 
 ## Project Summary
 
@@ -667,4 +667,5 @@ A few sentences about what you learned:
 - Where do you think human judgment still matters, even if the model seems "smart"
 
 The most surprising moment was changing a single weight genre from 2.0 to 1.0 and watching which songs appeared in the top five shift immediately. Before this project algorithmic bias felt like an abstract idea. Here it was one number I chose that produced a change in who gets good recommendations. Building this showed that recommenders do not understand music at all they just add up numbers and find the closest match. That works good when the features are good proxies for what the label means but it fails the moment the proxy breaks down like a sad mood user getting an upbeat gym track. Human judgment still matters most when the system is confident but wrong someone needs to notice that the results feel off decide the weights need changing and check whether the fix actually improved things the algorithm cannot do any of that itself.
+
 
