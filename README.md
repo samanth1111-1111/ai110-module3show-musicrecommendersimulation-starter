@@ -115,6 +115,8 @@ All songs are scored, collected into a list, sorted by score descending, and the
 
 ============================================================
 ```
+<img width="601" height="237" alt="image" src="https://github.com/user-attachments/assets/27be1b1d-2e19-4dbc-a968-cf656a19c729" />
+
 
 Genre carries the single largest weight in the system (+2.0), which is double the mood weight (+1.0). This creates a structural bias: a song that perfectly matches the user's mood and all numeric features but belongs to the wrong genre can score at most **5.75 / 7.75 (74%)**, while a genre-matching song with the wrong mood and identical numeric features scores **6.75 / 7.75 (87%)**. The genre-match song wins every time, even if the mood-match song would feel like a better fit to the listener.
 
