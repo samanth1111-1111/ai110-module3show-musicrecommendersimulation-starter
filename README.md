@@ -532,7 +532,10 @@ Write 1 to 2 paragraphs here about what you learned:
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
 
-a
+Recommenders do not understand music — they translate it into numbers and find the numbers that are closest together. This project made that substitution visible. The system has no idea what "chill lofi" sounds like, but it knows that low energy + slow tempo + high acousticness tends to match the label, and that proxy works well enough that the top results feel right. The failure cases are equally instructive: when a user asks for `mood=sad` and no sad song exists in the catalog, the system does not say "I don't know" — it quietly ignores the mood signal and returns the best energy match, which happens to be an upbeat gym track. That silent fallback is exactly how real-world bias creeps into production systems. The algorithm keeps running, keeps producing confident-looking output, and the user has no way to know that one of their preferences was simply discarded.
+
+The clearest bias discovered here is that a single categorical label — genre — can act as a gatekeeper that prevents any amount of numerical similarity from overcoming it. A near-perfect audio match in the wrong genre scores lower than a mediocre match in the right genre. In a 20-song catalog where most genres have exactly one representative, this means the recommender is not surfacing the best song for the listener; it is surfacing the only song that wears the right label. Scaling this up to a real app with millions of songs would not automatically fix the problem — if the catalog is imbalanced (more pop than blues, more English than Spanish), the genre bonus rewards whichever identity the system has the most data for, and underrepresented genres lose before the audio features are even compared.
+
 ---
 
 ## 7. `model_card_template.md`
@@ -571,6 +574,8 @@ Describe your scoring logic in plain language.
 
 Try to avoid code in this section, treat it like an explanation to a non programmer.
 
+Every song is scored on seven things: its genre label, its mood label, and five audio numbers — energy (how loud/intense), tempo (speed in BPM), acousticness (how instrument-driven vs. electronic), valence (how positive/upbeat), and danceability. The user tells the system their preferred genre, preferred mood, and target values for those same audio numbers. The system then checks each song: genre match earns 1 point, mood match earns 1 point, and each audio number earns up to a few points depending on how close the song's value is to the user's target. A perfect match gets full points; the further away, the fewer points. All points are added up and the top five songs win.
+
 ---
 
 ## 4. Data
@@ -582,6 +587,8 @@ Describe your dataset.
 - What kinds of genres or moods are represented
 - Whose taste does this data mostly reflect
 
+There are **20 songs** in `data/songs.csv`. No songs were added or removed from the original starter dataset. Genres represented include pop, lofi, rock, jazz, ambient, synthwave, indie pop, hip-hop, classical, R&B, country, EDM, folk, metal, soul, reggae, and blues. Moods include happy, chill, intense, focused, relaxed, moody, energetic, melancholic, romantic, euphoric, sad, angry, and uplifting. Most genres have only one song each. The catalog skews toward Western, English-language music and does not include Latin, K-pop, afrobeats, or world music, so it mostly reflects a mainstream Western listener's taste.
+
 ---
 
 ## 5. Strengths
@@ -592,6 +599,8 @@ You can think about:
 - Situations where the top results "felt right"
 - Particular user profiles it served well
 - Simplicity or transparency benefits
+
+The system worked best for the **Chill Lofi** profile — Library Rain and Midnight Coding came back as #1 and #2, which are exactly the kind of slow, acoustic, quiet tracks that fit that mood. The **High-Energy Pop** profile also felt right: Sunrise City was a natural #1. The biggest strength is transparency — every recommendation shows a breakdown of exactly which factors contributed and by how many points, so you can always see *why* a song ranked where it did. Most real recommenders cannot do that.
 
 ---
 
@@ -605,6 +614,8 @@ Some prompts:
 - Is it biased toward high energy or one genre by default
 - How could this be unfair if used in a real product
 
+Yes — if a mood the user wants (e.g., "sad") does not exist in the catalog, the system silently ignores it and picks the closest audio match instead, which can surface completely wrong-feeling songs. It treats every user the same way: one genre, one mood, fixed weights. It does not adapt to different taste shapes. Because most genres have only one song, the genre bonus acts like a guaranteed win — the lone genre representative always floats to the top regardless of how poorly it fits everything else. In a real product this would be unfair to listeners of niche or underrepresented genres, who would receive low-quality matches while mainstream pop or lofi listeners get better results just because the catalog has more songs for them.
+
 ---
 
 ## 7. Evaluation
@@ -616,7 +627,7 @@ Examples:
 - You compared your simulation to what a real app like Spotify or YouTube tends to recommend
 - You wrote tests for your scoring logic
 
-You do not need a numeric metric, but if you used one, explain what it measures.
+Five profiles were tested: three standard (High-Energy Pop, Chill Lofi, Deep Intense Rock) and two adversarial edge cases (High-Energy + Sad Mood, and All-Extremes with physically impossible targets like energy=1.0 and acousticness=1.0 at the same time). For each profile, the output was compared against intuition — did the top result feel musically right? Standard profiles passed; edge cases revealed that the system returns confident-looking but musically wrong answers when the targets are contradictory or when a requested mood does not exist in the catalog. No single numeric metric was used; evaluation was qualitative, comparing output against expected songs.
 
 ---
 
@@ -630,6 +641,10 @@ Examples:
 - Balance diversity of songs instead of always picking the closest match
 - Use more features, like tempo ranges or lyric themes
 
+1. **Soft genre matching** — instead of all-or-nothing, give partial credit for related genres (e.g., blues ↔ soul = 0.7, pop ↔ indie pop = 0.8). This would break the single-song filter bubble for niche genres.
+2. **Bigger, balanced catalog** — at least 5–10 songs per genre so that genre matching creates real competition rather than an automatic win for the only song with that label.
+3. **Conflict detection** — before scoring, check if the user's targets are internally contradictory (e.g., max energy + max acousticness almost never coexist). Flag the conflict instead of silently adding up partial scores that mean nothing.
+
 ---
 
 ## 9. Personal Reflection
@@ -639,4 +654,6 @@ A few sentences about what you learned:
 - What surprised you about how your system behaved
 - How did building this change how you think about real music recommenders
 - Where do you think human judgment still matters, even if the model seems "smart"
+
+The most surprising moment was changing a single weight genre from 2.0 to 1.0 and watching which songs appeared in the top five shift immediately. Before this project algorithmic bias felt like an abstract idea. Here it was one number I chose that produced a change in who gets good recommendations. Building this showed that recommenders do not understand music at all they just add up numbers and find the closest match. That works good when the features are good proxies for what the label means but it fails the moment the proxy breaks down like a sad mood user getting an upbeat gym track. Human judgment still matters most when the system is confident but wrong someone needs to notice that the results feel off decide the weights need changing and check whether the fix actually improved things the algorithm cannot do any of that itself.
 

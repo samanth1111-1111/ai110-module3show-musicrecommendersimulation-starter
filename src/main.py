@@ -87,7 +87,7 @@ def print_recommendations(label: str, user_prefs: dict, recommendations: list) -
     print("=" * 60)
     for rank, (song, score, explanation) in enumerate(recommendations, start=1):
         print(f"\n#{rank}  {song['title']}  —  {song['artist']}")
-        print(f"    Score : {score:.2f} / 7.75")
+        print(f"    Score : {score:.2f} / 8.25")
         print(f"    Genre : {song['genre']}  |  Mood: {song['mood']}")
         print("    Why   :")
         for reason in explanation.split(" | "):

@@ -78,8 +78,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
     # ── Categorical matches ───────────────────────────────────────────────────
     if song.get("genre") == user_prefs.get("genre"):
-        score += 2.0
-        reasons.append(f"genre match ({song['genre']}): +2.0")
+        score += 1.0
+        reasons.append(f"genre match ({song['genre']}): +1.0")
 
     if song.get("mood") == user_prefs.get("mood"):
         score += 1.0
@@ -99,7 +99,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
             f"{label} (song={song_val:.2f}, target={target_val:.2f}): +{pts:.2f}"
         )
 
-    _sim(song["energy"],       user_prefs.get("target_energy"),       1.50, "energy")
+    _sim(song["energy"],       user_prefs.get("target_energy"),       3.00, "energy")
     _sim(song["acousticness"], user_prefs.get("target_acousticness"), 1.00, "acousticness")
     _sim(song["tempo_bpm"],    user_prefs.get("target_tempo_bpm"),    1.00, "tempo",  norm=120.0)
     _sim(song["valence"],      user_prefs.get("target_valence"),      0.75, "valence")
